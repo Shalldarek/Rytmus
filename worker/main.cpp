@@ -36,7 +36,21 @@ int main() {
             std::cout << "Parsed Data Extraction:" << std::endl;
             std::cout << "Sleep Hours: " << response_data["sleep_hours"] << std::endl;
             std::cout << "Stress Level: " << response_data["stress_level"] << std::endl;
+            std::cout << "Mood level: " << response_data["mood_level"] << std::endl;
             std::cout << "Coffees: " << response_data["coffees"] << std::endl;
+
+            auto workout = response_data["workout"];
+
+            if (workout) 
+                std::cout << "I did excercices" << std::endl;
+            else {
+                std::cout << "I didn't do excercices" << std::endl;
+            }
+
+            if (response_data["mood_level"] > 7) 
+                std::cout << "Such a wonderful day I had" << std::endl;
+
+
         } catch (const json::parse_error& e) {
             std::cerr << "JSON parsing error: " << e.what() << std::endl;
         }
