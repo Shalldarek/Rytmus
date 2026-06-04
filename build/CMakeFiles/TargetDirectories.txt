@@ -1,0 +1,2 @@
+/home/venca/rytmus/build/CMakeFiles/edit_cache.dir
+/home/venca/rytmus/build/CMakeFiles/rebuild_cache.dir
