@@ -18,10 +18,7 @@ std::string get_today_date() {
 int main() {
     std::cout << "--- Rytmus C++ Worker ---" << std::endl;
 
-    std::string target_date = get_today_date();
-    std::string api_url = "http://localhost:8000/logs/" + target_date;
-
-    std::cout << "Fetching data for: " << target_date << " from " << api_url << std::endl;
+    std::string api_url = "http://localhost:8000/logs/";
 
     cpr::Response r = cpr::Get(cpr::Url{api_url});
 
@@ -33,23 +30,17 @@ int main() {
         try {
             json response_data = json::parse(r.text);
 
-            std::cout << "Parsed Data Extraction:" << std::endl;
-            std::cout << "Sleep Hours: " << response_data["sleep_hours"] << std::endl;
-            std::cout << "Stress Level: " << response_data["stress_level"] << std::endl;
-            std::cout << "Mood level: " << response_data["mood_level"] << std::endl;
-            std::cout << "Coffees: " << response_data["coffees"] << std::endl;
+            int total_coffees = 0;
+            int total_days = 0;
 
-            auto workout = response_data["workout"];
-
-            if (workout) 
-                std::cout << "I did excercices" << std::endl;
-            else {
-                std::cout << "I didn't do excercices" << std::endl;
+            for (const auto& daily_log : response_data) {
+                total_coffees += daily_log["coffees"].get<int>();
+                total_days++;
             }
 
-            if (response_data["mood_level"] > 7) 
-                std::cout << "Such a wonderful day I had" << std::endl;
+            int avg_coffees = total_coffees / total_days;
 
+            std::cout << "In average I drunk " << avg_coffees << " coffees" << std::endl;
 
         } catch (const json::parse_error& e) {
             std::cerr << "JSON parsing error: " << e.what() << std::endl;
