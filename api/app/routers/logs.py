@@ -27,7 +27,7 @@ def post_log(log: schemas.DailyLogCreate, db: Session=Depends(get_db)):
 
     db.add(db_log)
     db.commit()
-    db.refresh()
+    db.refresh(db_log)
 
     return db_log
 
