@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <cstdlib>
 
 using json = nlohmann::json;
 
@@ -18,7 +19,12 @@ std::string get_today_date() {
 int main() {
     std::cout << "--- Rytmus C++ Worker ---" << std::endl;
 
-    std::string api_url = "http://localhost:8000/logs/";
+    const char* env_url = std::getenv("DATABASE_API");
+    if (env_url == nullptr) {
+        std::cerr << "Error: DATABASE_API environment variable is not set!" << std::endl;
+        return 1; 
+    }
+    std::string api_url(env_url);
 
     cpr::Response r = cpr::Get(cpr::Url{api_url});
 
@@ -30,22 +36,23 @@ int main() {
         try {
             json response_data = json::parse(r.text);
 
-            int score = 0;
-
             for (const auto& daily_log : response_data) {
-                if (daily_log["sleep_hours"].get<double>() >= 7.0) score += 20;
-                if (daily_log["night_awakenings"].get<int>() <= 1) score += 10;
+                int score = 0;
+                
+                if (daily_log.value("sleep_hours", 0.0) >= 7.0) score += 20;
+                if (daily_log.value("night_awakenings", 0) <= 1) score += 10;
 
-                if (daily_log["stress_level"].get<int>() <= 4) score += 15;
-                if (daily_log["mood_level"].get<int>() >= 7) score += 15;
+                if (daily_log.value("stress_level", 10) <= 4) score += 15;
+                if (daily_log.value("mood_level", 0) >= 7) score += 15;
 
-                if (daily_log["water_liters"].get<double>() >= 2.5) score += 10;
-                if (daily_log["coffees"].get<int>() <= 2) score += 10;
-                if (daily_log["screen_time_hours"].get<double>() <= 4.0) score += 5;
+                if (daily_log.value("water_liters", 0.0) >= 2.5) score += 10;
+                if (daily_log.value("coffees", 10) <= 2) score += 10;
+                if (daily_log.value("screen_time_hours", 100.0) <= 4.0) score += 5;
 
-                if (daily_log["workout"].get<bool>() == true) score += 15;
+                if (daily_log.value("workout", false) == true) score += 15;
 
-                std::cout << "Your score for day " << daily_log["log_date"] << ": is " << score << " points!" << std::endl;
+                std::string log_date = daily_log.value("log_date", "Unknown Date");
+                std::cout << "Your score for day " << log_date << " is " << score << " points!" << std::endl;
             }
 
         } catch (const json::parse_error& e) {
