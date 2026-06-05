@@ -21,6 +21,17 @@ def get_log(log_date: str, db: Session = Depends(get_db)):
     log = db.query(models.DailyLog).filter(models.DailyLog.log_date == log_date).first()
     return log
 
+@router.post("/", response_model=schemas.DailyLogResponse)
+def post_log(log: schemas.DailyLogCreate, db: Session=Depends(get_db)):
+    db_log = models.DailyLog(**log.model_dump())
+
+    db.add(db_log)
+    db.commit()
+    db.refresh()
+
+    return db_log
+
+
 @router.delete("/{log_date}")
 def delete_log(log_date: date, db: Session = Depends(get_db)):
     success = delete_daily_log(db, log_date)
