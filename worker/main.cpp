@@ -4,7 +4,6 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
-#include <cstdlib>
 
 using json = nlohmann::json;
 
@@ -19,12 +18,7 @@ std::string get_today_date() {
 int main() {
     std::cout << "--- Rytmus C++ Worker ---" << std::endl;
 
-    const char* env_url = std::getenv("DATABASE_API");
-    if (env_url == nullptr) {
-        std::cerr << "Error: DATABASE_API environment variable is not set!" << std::endl;
-        return 1; 
-    }
-    std::string api_url(env_url);
+    std::string api_url("http://localhost:8000/logs/");
 
     cpr::Response r = cpr::Get(cpr::Url{api_url});
 
