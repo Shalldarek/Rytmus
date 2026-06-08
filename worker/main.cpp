@@ -28,6 +28,7 @@ int main() {
             json response_data = json::parse(r.text);
 
             stats.get_day_statistics(response_data);
+            stats.positive_sleeping_streak(response_data);
 
         } catch (const json::parse_error& e) {
             std::cerr << "JSON parsing error: " << e.what() << std::endl;

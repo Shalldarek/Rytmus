@@ -1,5 +1,6 @@
 #include "../include/Statistics.h"
 #include <iostream>
+#include <iomanip>
 
 void Statistics::get_day_statistics(json data) {
     for (const auto& daily_log : data) {
@@ -20,4 +21,19 @@ void Statistics::get_day_statistics(json data) {
         std::string log_date = daily_log.value("log_date", "Unknown Date");
         std::cout << "Your score for day " << log_date << " is " << score << " points!" << std::endl;
     }
+}
+
+void Statistics::positive_sleeping_streak(json data) {
+    int streak = 0;
+
+    for (const auto& log : data) {
+
+        if (log["sleep_hours"] >= 7) {
+            streak++;
+        } else {
+            streak = 0;
+        }
+    }
+
+    std::cout << "Sleeping Streak: " << streak << std::endl;
 }

@@ -5,4 +5,5 @@ using json = nlohmann::json;
 class Statistics {
     public:
         void get_day_statistics(json data);
+        void positive_sleeping_streak(json data);
 };
