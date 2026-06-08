@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.app.routers.logs import router
+from api.app.routers import logs, statistics
 
 app = FastAPI(
     title="Rytmus",
@@ -7,7 +7,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-app.include_router(router)
+app.include_router(logs.router)
+app.include_router(statistics.router)
 
 @app.get("/")
 def main_menu():

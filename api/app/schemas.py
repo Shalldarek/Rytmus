@@ -20,3 +20,18 @@ class DailyLogResponse(DailyLogBase):
 
     class Config:
         from_attributes = True
+
+class DayStatisticsSchema(BaseModel):
+    log_date: date
+    sleep_hours: float
+    night_awakenings: int
+    stress_level: int
+    mood_level: int
+    water_liters: float
+    coffees: int
+    screen_time_hours: float
+    workout: bool
+    score: int  
+
+    class Config:
+        from_attributes = True

@@ -1,6 +1,5 @@
 from datetime import date
 from fastapi import APIRouter, Depends
-from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from ..database import get_db
 from .. import schemas
@@ -72,8 +71,3 @@ def put_record(log_date: date, log_db: schemas.DailyLogCreate, db: Session=Depen
     db.refresh(log)
 
     return log
-
-@router.get("/statistics", response_model=schemas.DailyLogResponse)
-def get_week_statistics(db: Session=Depends(get_db)):
-    last_seven_records = db.query(models.DailyLog).order_by(desc(models.DailyLog.created_at)).limit(7).all()
-    return last_seven_records

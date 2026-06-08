@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, Boolean, Date, CheckConstraint
+from sqlalchemy import TIMESTAMP, Column, Integer, Float, Boolean, Date, CheckConstraint, func
 from .database import Base
 
 class DailyLog(Base):
@@ -13,3 +13,19 @@ class DailyLog(Base):
     screen_time_hours = Column(Float, default=0.0)
     workout = Column(Boolean, default=False)
     mood_level = Column(Integer, CheckConstraint('mood_level BETWEEN 1 AND 10'))
+
+class DayStatistics(Base):
+    __tablename__ = "day_statistics"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    log_date = Column(Date, nullable=False)
+    sleep_hours = Column(Float)
+    night_awakenings = Column(Integer)
+    stress_level = Column(Integer)
+    mood_level = Column(Integer)
+    water_liters = Column(Float)
+    coffees = Column(Integer)
+    screen_time_hours = Column(Float)
+    workout = Column(Boolean)
+    score = Column(Integer)
+    created_at = Column(TIMESTAMP, server_default=func.now())
