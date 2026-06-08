@@ -25,5 +25,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
-add_executable(worker main.cpp)
+add_executable(worker main.cpp
+    src/Statistics.cpp)
 target_link_libraries(worker PRIVATE cpr::cpr nlohmann_json::nlohmann_json)
